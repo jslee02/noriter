@@ -11,6 +11,7 @@ public:
   Object() = default;
 
   virtual void* createPropertyMap() {}
+  
 };
 
 class Skeleton : public Object

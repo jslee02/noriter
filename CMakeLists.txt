@@ -30,6 +30,7 @@ message(STATUS "============================================")
 #===============================================================================
 option(NORITER_BUILD_STATIC_LIBS "Build static libraries" OFF)
 option(NORITER_BUILD_TESTS "Build tests" ON)
+option(NORITER_CODE_COVERAGE "Build with code coverage test" OFF)
 
 #===============================================================================
 # Find dependencies
@@ -68,8 +69,13 @@ configure_file(
   "${PROJECT_BINARY_DIR}/include/${PROJECT_NAME}/Config.h"
   )
 
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -std=c++11)
+if(NORITER_CODE_COVERAGE)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
+endif(NORITER_CODE_COVERAGE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 
 # add the binary tree to the search path for include files
 # so that we will find TutorialConfig.h

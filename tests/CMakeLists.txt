@@ -1,3 +1,5 @@
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -coverage")
+
 # Create a macro to check if a list contains a value
 macro(list_contains var value)
   set(${var})
