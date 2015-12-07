@@ -1,14 +1,3 @@
-before_install() {
-  cd /tmp
-
-  # Install nlopt from source since Ubuntu 12.04 does not provide debian package for nlopt
-  curl -o nlopt-2.4.1.tar.gz http://ab-initio.mit.edu/nlopt/nlopt-2.4.1.tar.gz
-  tar -xf nlopt-2.4.1.tar.gz
-  cd nlopt-2.4.1/
-  sh autogen.sh &>/dev/null  # mute the output
-  make CPPFLAGS='-fPIC' && sudo make install &>/dev/null  # mute the output
-}
-
 # Install gcc-4.8 and g++-4.8 for C++11
 sudo apt-get -qq --yes install python-software-properties 
 sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
@@ -63,6 +52,4 @@ if [ $BUILD_CORE_ONLY = OFF ]; then
 else
   sudo apt-get -qq --yes --force-yes install $APT_CORE
 fi
-
-(before_install)
 
