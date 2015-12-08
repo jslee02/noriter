@@ -1,3 +1,5 @@
+sudo apt-add-repository --yes ppa:libccd-debs
+sudo apt-add-repository --yes ppa:fcl-debs
 sudo add-apt-repository --yes ppa:dartsim/ppa
 sudo apt-get -qq update
 
