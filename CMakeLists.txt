@@ -4,6 +4,7 @@
 cmake_minimum_required(VERSION 2.8.6 FATAL_ERROR)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(${CMAKE_MODULE_PATH}/NoriterMacros.cmake)
 
 #===============================================================================
 # Project settings
@@ -59,6 +60,8 @@ endif()
 #===============================================================================
 include_directories(BEFORE ${PROJECT_SOURCE_DIR}/include)
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
+
+include_directories("${CMAKE_BINARY_DIR}/include")
 
 #===============================================================================
 

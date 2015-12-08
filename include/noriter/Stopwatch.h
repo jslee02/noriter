@@ -62,14 +62,14 @@ namespace nrt {
 ///
 /// This is a definition of mTimer class.
 /// For measure the time, gettimeofday() api is used
-class Timer
+class Stopwatch
 {
 public:
   /// \brief Default constructor
-  explicit Timer(const std::string& _name = "Noname Timer");
+  explicit Stopwatch(const std::string& _name = "Noname Timer");
 
   /// \brief Default destructor
-  virtual ~Timer();
+  virtual ~Stopwatch();
 
   /// \brief Start timer
   void start();

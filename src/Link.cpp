@@ -25,20 +25,32 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "noriter/Property.h"
+#include "noriter/Link.h"
+
+#include <iostream>
 
 namespace nrt {
 
-//==============================================================================
-const PropertyMap* PropertyMaps::find(const ObjectType& objectType) const
-{
-  const auto result = mMap1.find(objectType);
-  const bool found = (result != mMap1.end());
+NORITER_BEGIN_PROPERTY_MAP(Serializable, Link)
+std::cout << "Link::create\n";
+NORITER_END_PROPERTY_MAP()
 
-  if (found)
-    return result->second;
-  else
-    return nullptr;
+//==============================================================================
+Link* Link::create()
+{
+  Link* newLink = new Link();
+
+  NORITER_CREATE_PROPERTY_MAP_ONCE(Link, newLink);
+
+  return newLink;
 }
+
+//==============================================================================
+Link::Link()
+  : Serializable(),
+    mMass(1.0)
+{
+}
+
 
 }  // namespace nrt

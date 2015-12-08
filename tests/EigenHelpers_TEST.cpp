@@ -65,7 +65,7 @@ inline void inner<empty_space>(double& res, const empty_space& v1, const empty_s
 //==============================================================================
 TEST(Template, Performance)
 {
-  nrt::Timer t;
+  nrt::Stopwatch t;
 
   double double_1 = random();
   double double_2 = random();

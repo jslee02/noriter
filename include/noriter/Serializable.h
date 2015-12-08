@@ -25,20 +25,55 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "noriter/Property.h"
+#ifndef NORITER_SERIALIZABLE_H
+#define NORITER_SERIALIZABLE_H
+
+#include <string>
+#include <mutex>
+
+#define NORITER_CREATE_PROPERTY_MAP_ONCE(class_name, object_instance)                      \
+  class_name* class_name##_temp = new class_name();                                        \
+  std::call_once(mOnceFlag, std::bind(&class_name::createPropertyMap, class_name##_temp));
 
 namespace nrt {
 
-//==============================================================================
-const PropertyMap* PropertyMaps::find(const ObjectType& objectType) const
-{
-  const auto result = mMap1.find(objectType);
-  const bool found = (result != mMap1.end());
+class PropertyBase;
+class PropertyMap;
 
-  if (found)
-    return result->second;
-  else
-    return nullptr;
-}
+class Serializable
+{
+public:
+
+  Serializable()
+  {
+
+  }
+
+
+  virtual void* createPropertyMap();
+
+  const PropertyMap* findPropertyMap() const;
+
+  virtual Serializable* findPropertyTarget(const PropertyBase* property);
+  virtual std::string getPropertyCore(const PropertyBase* property) const;
+
+  std::string getProperty(const std::string& propertyName);
+
+  std::string getProperty(const PropertyBase* property);
+
+
+  std::string mObjectType;
+
+protected:
+
+  static Serializable* create(Serializable* derived, std::once_flag& flag);
+
+protected:
+
+  static bool mIsInitialized;
+
+};
 
 }  // namespace nrt
+
+#endif  // NORITER_SERIALIZABLE_H

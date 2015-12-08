@@ -25,20 +25,58 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "noriter/Property.h"
+#ifndef NORITER_OBJECTMANAGER_H
+#define NORITER_OBJECTMANAGER_H
+
+#include <functional>
+#include <map>
 
 namespace nrt {
 
-//==============================================================================
-const PropertyMap* PropertyMaps::find(const ObjectType& objectType) const
-{
-  const auto result = mMap1.find(objectType);
-  const bool found = (result != mMap1.end());
+class PropertyMap;
+class PropertyMaps;
 
-  if (found)
-    return result->second;
-  else
-    return nullptr;
-}
+class ObjectManager
+{
+public:
+
+  static void startup();
+
+  static void cleanup();
+
+  static bool isInitialized();
+
+  using CallbackMap= std::map<std::string, std::function<void*()>>;
+
+  static CallbackMap* getObjectMap();
+
+  static void registerObject(const std::string& type,
+                             std::function<void*()> _registerFunction);
+
+  static void unregisterObject(const std::string& type);
+
+  static void* createObject(const std::string& type);
+
+  static PropertyMaps* getPropertyMaps();
+
+private:
+
+  static bool mIsInitialized;
+
+  static PropertyMaps* mPropertyMaps;
+
+  static CallbackMap* mObjects;
+
+private:
+
+  /// Constructor
+  ObjectManager() {}
+
+  /// Destructor
+  virtual ~ObjectManager() {}
+
+};
 
 }  // namespace nrt
+
+#endif

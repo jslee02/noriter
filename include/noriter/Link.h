@@ -25,20 +25,32 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
+#ifndef NORITER_LINK_H
+#define NORITER_LINK_H
+
 #include "noriter/Property.h"
+#include "noriter/Serializable.h"
 
 namespace nrt {
 
-//==============================================================================
-const PropertyMap* PropertyMaps::find(const ObjectType& objectType) const
+class Link : public Serializable
 {
-  const auto result = mMap1.find(objectType);
-  const bool found = (result != mMap1.end());
+  NORITER_DECLARE_PROPERTY_MAP(Link)
 
-  if (found)
-    return result->second;
-  else
-    return nullptr;
-}
+public:
+
+  static Link* create();
+
+  Link();
+
+  void setMass(double mass) { mMass = mass; }
+  double getMass() const { return mMass; }
+
+protected:
+  double mMass;
+
+};
 
 }  // namespace nrt
+
+#endif  // NORITER_SKELETON_H

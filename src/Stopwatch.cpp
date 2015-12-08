@@ -47,7 +47,7 @@
 namespace nrt {
 
 //==============================================================================
-Timer::Timer(const std::string& _name)
+Stopwatch::Stopwatch(const std::string& _name)
   : mCount(0),
     mLastElapsedTime(0.0),
     mTotalElapsedTime(0.0),
@@ -65,7 +65,7 @@ Timer::Timer(const std::string& _name)
 }
 
 //==============================================================================
-Timer::~Timer()
+Stopwatch::~Stopwatch()
 {
 }
 
@@ -79,7 +79,7 @@ double Timer::_convLIToSecs(const LARGE_INTEGER& _L)
 #endif
 
 //==============================================================================
-void Timer::start()
+void Stopwatch::start()
 {
   mIsStarted = true;
   mCount++;
@@ -92,7 +92,7 @@ void Timer::start()
 }
 
 //==============================================================================
-void Timer::stop()
+void Stopwatch::stop()
 {
   mIsStarted = false;
 #ifdef _WIN32
@@ -109,7 +109,7 @@ void Timer::stop()
 }
 
 //==============================================================================
-double Timer::getElapsedTime()
+double Stopwatch::getElapsedTime()
 {
 #ifdef _WIN32
   LARGE_INTEGER timenow;
@@ -126,25 +126,25 @@ double Timer::getElapsedTime()
 }
 
 //==============================================================================
-double Timer::getLastElapsedTime() const
+double Stopwatch::getLastElapsedTime() const
 {
   return mLastElapsedTime;
 }
 
 //==============================================================================
-double Timer::getTotalElapsedTime() const
+double Stopwatch::getTotalElapsedTime() const
 {
   return mTotalElapsedTime;
 }
 
 //==============================================================================
-bool Timer::isStarted() const
+bool Stopwatch::isStarted() const
 {
   return mIsStarted;
 }
 
 //==============================================================================
-void Timer::print()
+void Stopwatch::print()
 {
   if (mCount > 0)
   {
@@ -163,7 +163,7 @@ void Timer::print()
 }
 
 //==============================================================================
-double Timer::getWallTime()
+double Stopwatch::getWallTime()
 {
 #ifdef _WIN32
   LARGE_INTEGER ticksPerSecond;
