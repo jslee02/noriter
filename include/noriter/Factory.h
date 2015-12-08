@@ -145,18 +145,22 @@ private:
 
 } // namespace nrt
 
+#define NORITER_CONCATENATE_DETAIL(x, y) x##y
+#define NORITER_CONCATENATE(x, y) NORITER_CONCATENATE_DETAIL(x, y)
+#define NORITER_UNIQUE(x) NORITER_CONCATENATE(x, __LINE__)
+
 #define NORITER_REGISTER_OBJECT_TO_FACTORY(key_type, key, base, derived) \
   namespace {                                                            \
   const FactoryRegister<key_type, base, derived>&                        \
-  factory_register_##__LINE__                                            \
+  NORITER_CONCATENATE(factory_register_, __LINE__)                       \
     = FactoryRegister<key_type, base, derived>::getInstance(key);        \
   }
 
 #define NORITER_UNREGISTER_OBJECT_TO_FACTORY(key_type, key)              \
   namespace {                                                            \
   const FactoryUnregister<key_type, base, derived>&                      \
-  factory_unregister_##__LINE__                                          \
+  NORITER_CONCATENATE(factory_unregister_, __LINE__)                     \
     = FactoryUnregister<key_type, base, derived>::getInstance(key);      \
   }
 
-#endif  // _DART5_FACTORY_H_
+#endif  // NORITER_FACTORY_H

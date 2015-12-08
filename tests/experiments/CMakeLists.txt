@@ -19,7 +19,7 @@ foreach(test ${tests})
   # Add the executable if not to be ignored
   list_contains(contains ${base} ${dontTest})
   if(NOT contains)
-    add_test(${base} ${CMAKE_BINARY_DIR}/bin/tests/experiments/${base})
+    add_test(${base}-experiment ${CMAKE_BINARY_DIR}/bin/tests/experiments/${base}-experiment)
     message(STATUS "Adding test: " ${base})
   endif(NOT contains)
 
