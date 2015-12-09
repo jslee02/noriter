@@ -35,18 +35,21 @@
 namespace nrt {
 
 //==============================================================================
-// Generic SFINAE test if a class has a method where the return type and
-// argment types are specified.
+// Generic SFINAE test checks if a class has a method where the return type and
+// argment types are specified at the compile time.
 //
 // [1] http://stackoverflow.com/questions/87372/check-if-a-class-has-a-member-function-of-a-given-signature
 // [2] http://stackoverflow.com/questions/7557990/c-method-name-as-template-parameter
 //==============================================================================
 
-#define NORITER_HAS_METHOD(_class_name, _method_name, _return_type, _arg_types)\
-  has_method<_class_name, _return_type(_arg_types)>::method_name<&_class_name::_method_name>::value
+#define NORITER_HAS_METHOD(_class_name, _method_name, _return_type, ...)\
+  (has_method<_class_name, _return_type(__VA_ARGS__)>::method_name<&_class_name::_method_name>)
 
-#define NORITER_IF_HAS_METHOD\
-  if (has_method<_class_name, _return_type(_arg_types)>::method_name<&_class_name::_method_name>::value)
+#define NORITER_HAS_METHOD_TYPE(_class_name, _method_name, _return_type, ...)\
+  (has_method<_class_name, _return_type(__VA_ARGS__)>::method_name<&_class_name::_method_name>::type)
+
+#define NORITER_HAS_METHOD_VALUE(_class_name, _method_name, _return_type, ...)\
+  (has_method<_class_name, _return_type(__VA_ARGS__)>::method_name<&_class_name::_method_name>::value)
 
 template <typename, typename T>
 struct has_method
