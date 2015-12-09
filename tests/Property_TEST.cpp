@@ -1,22 +1,42 @@
 #include <gtest/gtest.h>
+#include <string>
+#include <iostream>
 
 #include "noriter/noriter.h"
 
 using namespace nrt;
 
+class SerializableFactory : public Factory<ObjectType, Serializable>
+{
+public:
+
+  static SerializableFactory& getInstance()
+  {
+    static SerializableFactory instance;
+
+    return instance;
+  }
+
+private:
+  SerializableFactory()
+  {
+    NORITER_REGISTER_OBJECT_TO_FACTORY_IN_FUNCTION(ObjectType, ObjectType::Link, Serializable, Link);
+    NORITER_REGISTER_OBJECT_TO_FACTORY_IN_FUNCTION(ObjectType, ObjectType::Skeleton, Serializable, Skeleton);
+  }
+
+protected:
+
+private:
+};
+
 //==============================================================================
 TEST(Property, Basic)
 {
-  Skeleton* skel1 = Skeleton::create();
-  Skeleton* skel2 = Skeleton::create();
-  Skeleton* skel3 = Skeleton::create();
-  Skeleton* skel4 = Skeleton::create();
-  Skeleton* skel5 = Skeleton::create();
+//  auto link1 = SerializableFactory::getInstance().create(ObjectType::Link);
 
-  Link* link = Link::create();
-//  skel->createPropertyMap();
+//  std::string mass = link1->getProperty("Mass");
 
-//  std::cout << link->getProperty("Mass") << std::endl;
+//  std::cout << "mass: " << mass << std::endl;
 }
 
 //==============================================================================

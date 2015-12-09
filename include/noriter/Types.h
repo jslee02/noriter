@@ -25,34 +25,62 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "noriter/Link.h"
-#include "noriter/Factory.h"
-
-#include <iostream>
+#ifndef NORITER_TYPES_H
+#define NORITER_TYPES_H
 
 namespace nrt {
 
-NORITER_BEGIN_PROPERTY_MAP(Serializable, Link)
-std::cout << "Link::create\n";
-NORITER_END_PROPERTY_MAP()
-
-//==============================================================================
-Link* Link::create()
+enum class ObjectType : unsigned int
 {
-  Link* newLink = new Link();
+  Link,
+  Joint,
+  Skeleton
+};
 
-  NORITER_CREATE_PROPERTY_MAP_ONCE(Link, newLink);
-
-  return newLink;
-}
-
-//==============================================================================
-Link::Link()
-  : TSerializable<Link>(),
-    mMass(1.0)
+enum class PropertyCategory
 {
-  std::cout << "[Link::Link]\n";
-}
+  PropertyCategory1,
+  PropertyCategory2,
+  PropertyCategory3,
+  MISC
+};
+
+enum class PropertyType : unsigned int
+{
+  Normal = 0x00000000,
+
+  GeneralTypeMask = 0x000000FF,
+  BehaviorMask    = 0xFF000000,
+
+  ReadOnly        = 0x01000000,
+  NotSerializable = 0x02000000,
+  DynamicDefVal   = 0x04000000,
+  NoSave          = 0x08000000,
+  UI_Hidden       = 0x10000000,
+  UI_Disabled     = 0x20000000,
+
+  Char            = 0x00000010,
+  Byte            = 0x00000011,
+  Int32           = 0x00000012,
+  UInt32          = 0x00000013,
+  Float           = 0x00000014,
+  Double          = 0x00000015,
+  String          = 0x00000016,
+
+  Vector3d        = 0x00000050,
+  Vector6d        = 0x00000051,
+  Matrix3d        = 0x00000052,
+  Isometry3d      = 0x00000053,
+};
+
+enum class PropertyName : unsigned int
+{
+  Invalid = 0x00000000,
+
+
+};
 
 
 }  // namespace nrt
+
+#endif  // NORITER_TYPES_H

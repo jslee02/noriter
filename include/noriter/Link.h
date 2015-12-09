@@ -33,7 +33,7 @@
 
 namespace nrt {
 
-class Link : public Serializable
+class Link : public TSerializable<Link>
 {
   NORITER_DECLARE_PROPERTY_MAP(Link)
 

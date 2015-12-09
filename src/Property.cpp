@@ -41,4 +41,10 @@ const PropertyMap* PropertyMaps::find(const ObjectType& objectType) const
     return nullptr;
 }
 
+//==============================================================================
+PropertyBase* PropertyMap::findProperty(const PropertyName& propertyName) const
+{
+
+}
+
 }  // namespace nrt

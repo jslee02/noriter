@@ -32,13 +32,17 @@
 #include <functional>
 #include <vector>
 #include <map>
+#include <type_traits>
 #include <utility>
+
+#include "noriter/Types.h"
 
 #define NORITER_DECLARE_PROPERTY_MAP(class_name)                               \
   protected:                                                                   \
   virtual void* createPropertyMap();                                         \
   using ThisClass = class_name;                                              \
-  static std::once_flag mOnceFlag;
+  static std::once_flag mOnceFlag;                                          \
+  static std::once_flag mOnceFlagFactoryRegister;
 
 #define NORITER_BEGIN_PROPERTY_MAP(super_class, class_name)                    \
   std::once_flag class_name::mOnceFlag;                                        \
@@ -74,28 +78,10 @@
 namespace nrt {
 
 
-#include <map>
-#include <type_traits>
+
 
 //#define NORITER_ENUM_TO_TYPE(enum_name)\
 //  using enum_name =
-
-
-
-
-enum class ObjectEnumType : int
-{
-  Link,
-  Joint,
-  Skeleton
-};
-
-enum class DataEnumType : int
-{
-  Vector2d,
-  Vector3d,
-  SE3
-};
 
 //template <ObjectEnumType I>
 //struct Int2Type
@@ -113,42 +99,40 @@ enum class DataEnumType : int
 
 //using Vector2dEnumType = Data2Type<DataEnumType::Vector2d>;
 
-template<typename T>
-struct PropertyTraits
-{
-  using type = T;
+template<unsigned int T>
+struct type_temp {};
 
-  static const int value = T::value;
+template<ObjectType T>
+struct PropertyTraits {};
+
+class Link;
+
+template<>
+struct PropertyTraits<ObjectType::Link>
+{
+  using type = Link;
 };
 
+using ObjectTypes = std::vector<ObjectType>;
 
+struct PropertyGetterFunction {};
+struct PropertySetterFunction {};
 
-
-template<size_t T>
-struct type {};
-
-struct my_type : type<1> {};
-
-using PropertyGetterFunction = std::function<void*(void)>;
-using PropertySetterFunction = std::function<void(void*)>;
-
-template<typename T>
-using TPropertyGetterFunction = std::function<T*(void)>;
-template<typename T>
-using TPropertySetterFunction = std::function<void(T*)>;
-
-using ObjectType  = std::string;
-using ObjectTypes = std::vector<std::string>;
-
-enum class PropertyCategory
+template <typename ArgType>
+struct TPropertyGetterFunction : PropertyGetterFunction
 {
-  PropertyCategory1,
-  PropertyCategory2,
-  PropertyCategory3,
-  MISC
+  using func_type = std::function<const ArgType&(void)>;
+
+  func_type func;
 };
 
-using PropertyName = std::string;
+template <typename ArgType>
+struct TPropertySetterFunction : PropertySetterFunction
+{
+  using func_type = std::function<void(const ArgType&)>;
+
+  func_type func;
+};
 
 class PropertyBase
 {
@@ -162,22 +146,26 @@ public:
 
   }
 
-  PropertyGetterFunction getPropGetPfn() const { return mGetFnc; }
+  PropertyGetterFunction* getPropGetPfn() const { return mGetFnc; }
 
   //protected:
 public:
-  PropertyGetterFunction mGetFnc;
-  PropertySetterFunction mSetFnc;
+  PropertyGetterFunction* mGetFnc;
+  PropertySetterFunction* mSetFnc;
   PropertyCategory mCategroy;
   PropertyName mName;
   std::string mDefaultString;
 
 };
 
+
+
 template<typename T>
 class Property : public PropertyBase
 {
 public:
+  TPropertyGetterFunction<T>* mTGetFnc;
+  TPropertySetterFunction<T>* mTSetFnc;
 };
 
 class Properties : public std::vector<const PropertyBase*>
@@ -188,6 +176,8 @@ public:
 class PropertyMap : public std::map<PropertyName, PropertyBase*>
 {
 public:
+
+  PropertyBase* findProperty(const PropertyName& propertyName) const;
 
 protected:
 

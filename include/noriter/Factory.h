@@ -31,8 +31,16 @@
 #include <map>
 #include <string>
 #include <functional>
+#include "noriter/Macros.h"
 
 namespace nrt {
+
+namespace detail {
+
+template <typename T>
+struct type {};
+
+}
 
 template <typename KeyType, typename Base>
 class Factory
@@ -52,13 +60,13 @@ public:
     getMap().erase(key);
   }
 
-  static Base* create(const KeyType& key)
+  static Base* create(const KeyType& key) throw()
   {
     const auto it = getMap().find(key);
 
     const bool found = (it != getMap().end());
     if (!found)
-      return nullptr;
+      throw;
 
     return it->second();
   }
@@ -145,22 +153,30 @@ private:
 
 } // namespace nrt
 
-#define NORITER_CONCATENATE_DETAIL(x, y) x##y
-#define NORITER_CONCATENATE(x, y) NORITER_CONCATENATE_DETAIL(x, y)
-#define NORITER_UNIQUE(x) NORITER_CONCATENATE(x, __LINE__)
-
 #define NORITER_REGISTER_OBJECT_TO_FACTORY(key_type, key, base, derived) \
   namespace {                                                            \
   const FactoryRegister<key_type, base, derived>&                        \
-  NORITER_CONCATENATE(factory_register_, __LINE__)                       \
+  NORITER_UNIQUE(factory_register)                                       \
     = FactoryRegister<key_type, base, derived>::getInstance(key);        \
   }
+
+#define NORITER_REGISTER_OBJECT_TO_FACTORY_IN_FUNCTION(key_type, key, base, derived) \
+  const static FactoryRegister<key_type, base, derived>&                             \
+  NORITER_UNIQUE(factory_register)                                                   \
+    = FactoryRegister<key_type, base, derived>::getInstance(key);
 
 #define NORITER_UNREGISTER_OBJECT_TO_FACTORY(key_type, key)              \
   namespace {                                                            \
   const FactoryUnregister<key_type, base, derived>&                      \
-  NORITER_CONCATENATE(factory_unregister_, __LINE__)                     \
+  NORITER_UNIQUE(factory_unregister)                                     \
     = FactoryUnregister<key_type, base, derived>::getInstance(key);      \
   }
+
+//#define NORITER_REGISTER_OBJECT_TO_FACTORY_ONCE(class_name, object_instance)                      \
+//  class_name class_name##_temp = class_name();                                        \
+//  std::call_once(mOnceFlag, std::bind(&class_name::createPropertyMap, &class_name##_temp));
+
+//  std::call_once(mOnceFlagFactoryRegister, std::bind(&class_name::createPropertyMap, class_name##_temp));
+
 
 #endif  // NORITER_FACTORY_H

@@ -25,34 +25,12 @@
 // POSSIBILITY OF SUCH DAMAGE.
 //
 
-#include "noriter/Link.h"
-#include "noriter/Factory.h"
+#ifndef NORITER_MACROS_H
+#define NORITER_MACROS_H
 
-#include <iostream>
+#define NORITER_CONCATENATE_DETAIL(x, y) x##y
+#define NORITER_CONCATENATE(x, y)        NORITER_CONCATENATE_DETAIL(x, y)
+#define NORITER_UNIQUE(x)                NORITER_CONCATENATE(x, __LINE__)
 
-namespace nrt {
+#endif  // NORITER_MACROS_H
 
-NORITER_BEGIN_PROPERTY_MAP(Serializable, Link)
-std::cout << "Link::create\n";
-NORITER_END_PROPERTY_MAP()
-
-//==============================================================================
-Link* Link::create()
-{
-  Link* newLink = new Link();
-
-  NORITER_CREATE_PROPERTY_MAP_ONCE(Link, newLink);
-
-  return newLink;
-}
-
-//==============================================================================
-Link::Link()
-  : TSerializable<Link>(),
-    mMass(1.0)
-{
-  std::cout << "[Link::Link]\n";
-}
-
-
-}  // namespace nrt

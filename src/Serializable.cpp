@@ -53,6 +53,11 @@ Serializable* Serializable::create(Serializable* derived, std::once_flag& flag)
 }
 
 //==============================================================================
+Serializable::Serializable()
+{
+  std::cout << "[Serializable::Serializable]\n";
+}
+
 void* Serializable::createPropertyMap()
 {
   std::cout << "[Serializable::createPropertyMap]\n";
@@ -65,40 +70,33 @@ const PropertyMap* Serializable::findPropertyMap() const
 }
 
 //==============================================================================
+const PropertyBase* Serializable::findProperty(const std::string& propertyName) const
+{
+//  return const_cast<Serializable*>(this)->findPropertyMap()->findProperty(propertyName);
+}
+
+//==============================================================================
 Serializable* Serializable::findPropertyTarget(const PropertyBase* /*property*/)
 {
   return this;
 }
 
-//==============================================================================
-std::string Serializable::getPropertyCore(const PropertyBase* property) const
-{
-  // Double check
-  //assert(mObjectType == property->getOwnerType());
+////==============================================================================
+//std::string Serializable::getPropertyCore(const PropertyBase* property) const
+//{
+//  // Double check
+//  //assert(mObjectType == property->getOwnerType());
 
-  // General implementations
-  PropertyGetterFunction getter;
-  getter = property->getPropGetPfn();
-  assert(getter);
+//  // General implementations
+//  PropertyGetterFunction getter;
+//  getter = *property->getPropGetPfn();
+//  assert(getter);
 
-  getter();
-}
+////  PropertyTraits<ObjectType_::OT_Link>::type a;
 
-//==============================================================================
-std::string Serializable::getProperty(const std::string& propertyName)
-{
+//  getter();
+//}
 
-}
-
-//==============================================================================
-std::string Serializable::getProperty(const PropertyBase* property)
-{
-  if (property)
-    return findPropertyTarget(property)->getPropertyCore(property);
-  else
-    return std::string();
-    // TODO: throw invalid property name exception
-}
 
 
 }  // namespace nrt

@@ -28,12 +28,17 @@
 #ifndef NORITER_SERIALIZABLE_H
 #define NORITER_SERIALIZABLE_H
 
+#include <cassert>
 #include <string>
 #include <mutex>
 
+#include "noriter/Property.h"
+#include "noriter/Types.h"
+
 #define NORITER_CREATE_PROPERTY_MAP_ONCE(class_name, object_instance)                      \
-  class_name* class_name##_temp = new class_name();                                        \
-  std::call_once(mOnceFlag, std::bind(&class_name::createPropertyMap, class_name##_temp));
+  class_name class_name##_temp = class_name();                                        \
+  std::call_once(mOnceFlag, std::bind(&class_name::createPropertyMap, &class_name##_temp));
+
 
 namespace nrt {
 
@@ -44,25 +49,24 @@ class Serializable
 {
 public:
 
-  Serializable()
-  {
-
-  }
+  Serializable();
 
 
   virtual void* createPropertyMap();
 
   const PropertyMap* findPropertyMap() const;
 
+  const PropertyBase* findProperty(const std::string& propertyName) const;
+
   virtual Serializable* findPropertyTarget(const PropertyBase* property);
-  virtual std::string getPropertyCore(const PropertyBase* property) const;
+//  virtual std::string getPropertyCore(const PropertyBase* property) const;
 
-  std::string getProperty(const std::string& propertyName);
+  virtual std::string getProperty(const std::string& propertyName) = 0;
 
-  std::string getProperty(const PropertyBase* property);
+  virtual std::string getProperty(const PropertyBase* property) = 0;
 
 
-  std::string mObjectType;
+  ObjectType mObjectType;
 
 protected:
 
@@ -72,6 +76,39 @@ protected:
 
   static bool mIsInitialized;
 
+};
+
+template <typename Derived>
+class TSerializable : public Serializable
+{
+public:
+  std::string getProperty(const std::string& propertyName) override final
+  {
+
+  }
+
+  std::string getProperty(const PropertyBase* property) override final
+  {
+    // Double check
+    //assert(mObjectType == property->getOwnerType());
+
+    if (nullptr == property)
+      return std::string();
+    // TODO: throw invalid property name exception
+
+    // General implementations
+    TPropertyGetterFunction<Derived> getter;
+    getter = *static_cast<TPropertyGetterFunction<Derived>*>(property->getPropGetPfn());
+    assert(getter.func);
+
+  //  PropertyTraits<ObjectType_::OT_Link>::type a;
+
+    getter.func();
+
+  }
+protected:
+
+private:
 };
 
 }  // namespace nrt

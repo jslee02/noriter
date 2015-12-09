@@ -33,7 +33,7 @@
 
 namespace nrt {
 
-class Skeleton : public Serializable
+class Skeleton : public TSerializable<Skeleton>
 {
   NORITER_DECLARE_PROPERTY_MAP(Skeleton)
 
@@ -41,7 +41,7 @@ public:
 
   static Skeleton* create();
 
-  Skeleton() : Serializable()
+  Skeleton() : TSerializable<Skeleton>()
   {
   }
 
