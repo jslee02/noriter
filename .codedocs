@@ -12,11 +12,11 @@
 PROJECT_NAME = noriter
 
 # One or more directories and files that contain example code to be included.
-EXAMPLE_PATH = ./include, ./src
+EXAMPLE_PATH =
 
 # One or more directories and files to exclude from documentation generation.
 # Use relative paths with respect to the repository root directory.
-EXCLUDE = ./ci, ./make, ./tests, ./tutorials
+EXCLUDE = ./ci, ./cmake, ./tests, ./tutorials
 
 # One or more wildcard patterns to exclude files and directories from document
 # generation.
