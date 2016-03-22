@@ -8,3 +8,10 @@ endif()
 
 #target_link_libraries(${PROJECT_NAME} ${CCD_LIBRARIES} ${OCTOMAP_LIBRARIES} ${Boost_LIBRARIES})
 #install(TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION lib/ LIBRARY DESTINATION lib/)
+
+# Setup the coveralls target and tell it to gather
+# coverage data for all the lib sources.
+if(NORITER_COVERALLS)
+  coveralls_setup("${NORITER_HEADERS};${NORITER_SOURCE_CODE}" ${NORITER_COVERALLS_UPLOAD})
+endif()
+

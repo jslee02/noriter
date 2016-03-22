@@ -7,7 +7,14 @@ dist: trusty
 compiler:
   - gcc
   - clang
+env:
+  - BUILD_TYPE=Debug   COVERALLS=OFF
+  - BUILD_TYPE=Release COVERALLS=OFF
 matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      env: BUILD_TYPE=Debug COVERALLS=ON COVERALLS_REPO_TOKEN=J01mEBN9t9PJ9AlyuWk1XRrS3y3l5WCqB
   exclude:
     - os: osx
       compiler: gcc
@@ -17,7 +24,7 @@ before_install:
 install: 
   - mkdir build
   - cd build 
-  - cmake ..
+  - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DNORITER_COVERALLS=$COVERALLS
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then '../ci/script_linux.sh' ; fi
   - if [ "$TRAVIS_OS_NAME" = "osx"   ]; then '../ci/script_osx.sh'   ; fi
