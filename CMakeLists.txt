@@ -32,6 +32,13 @@ message(STATUS "============================================")
 option(NORITER_BUILD_STATIC_LIBS "Build static libraries" OFF)
 option(NORITER_BUILD_TESTS "Build tests" ON)
 option(NORITER_CODE_COVERAGE "Build with code coverage test" OFF)
+option(NORITER_COVERALLS "Turn on coveralls support" OFF)
+option(NORITER_COVERALLS_UPLOAD "Upload the generated coveralls json" ON)
+
+if(NORITER_COVERALLS)
+  include(Coveralls)
+  coveralls_turn_on_coverage()
+endif()
 
 #===============================================================================
 # Find dependencies
